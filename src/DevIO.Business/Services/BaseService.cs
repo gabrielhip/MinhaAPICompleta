@@ -36,6 +36,7 @@ namespace DevIO.Business.Services
                 return true;
 
             Notificar(validator);
+
             return false;
         }
     }

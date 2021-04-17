@@ -13,16 +13,19 @@ namespace DevIO.Business.Notificacoes
             _notificacoes = new List<Notificacao>();
         }
 
+        //adiciona a notificação lançada dentro da lista de notificações
         public void Handle(Notificacao notificacao)
         {
             _notificacoes.Add(notificacao);
         }
 
+        //retorna a lista de notificações
         public List<Notificacao> ObterNotificacoes()
         {
             return _notificacoes;
         }
 
+        //verifica se existe uma notificação
         public bool TemNotificacao()
         {
             return _notificacoes.Any();

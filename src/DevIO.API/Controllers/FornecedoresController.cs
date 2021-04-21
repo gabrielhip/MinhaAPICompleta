@@ -91,7 +91,7 @@ namespace DevIO.API.Controllers
 
             await _fornecedorService.Remover(id);
 
-            return CustomResponse(); //não retorno o fornecedor pois não faz muito sentido nesse caso
+            return CustomResponse(fornecedorViewModel);
         }
 
         [HttpGet("obter-endereco/{id:guid}")]

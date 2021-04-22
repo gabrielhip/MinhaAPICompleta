@@ -18,9 +18,9 @@ namespace DevIO.API.Controllers
         private readonly IProdutoService _produtoService;
         private readonly IMapper _mapper;
 
-        public ProdutosController(INotificador notificador, 
-                                  IProdutoRepository produtoRepository, 
-                                  IProdutoService produtoService, 
+        public ProdutosController(INotificador notificador,
+                                  IProdutoRepository produtoRepository,
+                                  IProdutoService produtoService,
                                   IMapper mapper) : base(notificador)
         {
             _produtoRepository = produtoRepository;
@@ -64,6 +64,42 @@ namespace DevIO.API.Controllers
 
             var produto = _mapper.Map<Produto>(produtoViewModel);
             await _produtoService.Adicionar(produto);
+
+            return CustomResponse(produtoViewModel);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoViewModel)
+        {
+            if (id != produtoViewModel.Id) //valida se o id do objeto é diferente do id enviado
+            {
+                NotificarErro("Os ids informados não são iguais!");
+                return CustomResponse();
+            }
+
+            var produtoAtualizacao = await ObterProduto(id); //obtem o produto do banco
+            produtoViewModel.Imagem = produtoAtualizacao.Imagem; //seta a imagem do produtoAtualizacao no produtoViewModel
+            
+            if (!ModelState.IsValid) return CustomResponse(ModelState); //valida a ModelState
+
+            if (produtoViewModel.ImagemUpload != null) //se a imagemUpload for diferente de null, eu faço o upload
+            {
+                var imagemNome = Guid.NewGuid() + "_" + produtoViewModel.Imagem; 
+                if (!UploadArquivo(produtoViewModel.ImagemUpload, imagemNome))
+                {
+                    return CustomResponse(ModelState);
+                }
+
+                produtoAtualizacao.Imagem = imagemNome; //troca a imagem do produtoAtualizacao para o imagemNome
+            }
+
+            //popula o restante dos dados
+            produtoAtualizacao.Nome = produtoViewModel.Nome;
+            produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            produtoAtualizacao.Valor = produtoViewModel.Valor;
+            produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+
+            await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
 
             return CustomResponse(produtoViewModel);
         }

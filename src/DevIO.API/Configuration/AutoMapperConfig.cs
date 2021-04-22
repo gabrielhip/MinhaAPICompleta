@@ -13,6 +13,8 @@ namespace DevIO.API.Configuration
             
             CreateMap<ProdutoViewModel, Produto>();
 
+            CreateMap<ProdutoImagemViewModel, Produto>().ReverseMap();
+
             //atribui o nome do fornecedor da classe modal para a viewmodel
             CreateMap<Produto, ProdutoViewModel>()
                 .ForMember(dest => dest.NomeFornecedor,

@@ -41,6 +41,17 @@ namespace DevIO.API
             //suprimindo a forma da validação da view model automática, pois quero validar eu mesmo para personalizar as respostas para o usuário
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
+            //configurando CORS
+            //abrindo a aplicação para quem quiser acessar criando a policy "Development"
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Development",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             services.ResolveDependencies(); //Configurando a injeção de dependência
         }
 
@@ -54,6 +65,9 @@ namespace DevIO.API
             {
                 app.UseHsts();
             }
+
+            //usando a configuração de CORS criada, através da policy "Development"
+            app.UseCors("Development");
 
             app.UseHttpsRedirection();
             app.UseMvc();

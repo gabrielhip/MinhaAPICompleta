@@ -10,7 +10,13 @@ namespace DevIO.API.Configuration
         {
             CreateMap<Fornecedor, FornecedorViewModel>().ReverseMap(); //se o mapeamento for igual nos dois sentidos usar .ReverseMap()
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
-            CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            
+            CreateMap<ProdutoViewModel, Produto>();
+
+            //atribui o nome do fornecedor da classe modal para a viewmodel
+            CreateMap<Produto, ProdutoViewModel>()
+                .ForMember(dest => dest.NomeFornecedor,
+                    opt => opt.MapFrom(src => src.Fornecedor.Nome));
         }
     }
 }

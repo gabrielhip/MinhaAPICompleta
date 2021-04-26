@@ -26,9 +26,11 @@ namespace DevIO.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddIdentityConfiguration(Configuration); //adicionando a configuração do Identity
+
             services.AddAutoMapper(typeof(Startup)); //Adicionando o automapper passando o tipo Startup
 
-            services.WebApiConfig();
+            services.WebApiConfig(); //configuração de MVC e CORS
 
             services.ResolveDependencies(); //Configurando a injeção de dependência
         }
@@ -44,6 +46,7 @@ namespace DevIO.API
                 app.UseHsts();
             }
 
+            app.UseAuthentication(); //precisa sempre vir antes da configuração do MVC
             app.UseMvcConfiguration();
 
         }

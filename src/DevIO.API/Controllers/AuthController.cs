@@ -25,7 +25,8 @@ namespace DevIO.API.Controllers
                               UserManager<IdentityUser> userManager, 
                               SignInManager<IdentityUser> signInManager, 
                               //IOptions serve para pegar dados que servem como parâmetros
-                              IOptions<AppSettings> appSettings) : base(notificador)
+                              IOptions<AppSettings> appSettings,
+                              IUser user) : base(notificador, user)
         {
             _userManager = userManager;
             _signInManager = signInManager;

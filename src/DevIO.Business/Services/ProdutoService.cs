@@ -9,16 +9,21 @@ namespace DevIO.Business.Services
     public class ProdutoService : BaseService, IProdutoService
     {
         private readonly IProdutoRepository _produtoRepository;
+        private readonly IUser _user;
 
         public ProdutoService(IProdutoRepository produtoRepository,
-            INotificador _notificador) : base(_notificador)
+            INotificador _notificador,
+            IUser user) : base(_notificador)
         {
             _produtoRepository = produtoRepository;
+            _user = user;
         }
 
         public async Task Adicionar(Produto produto)
         {
             if (!ExectuarValidacao(new ProdutoValidation(), produto)) return;
+
+            //var user = _user.GetUserId(); //se eu quiser receber dados do usuário por algum motivo
 
             await _produtoRepository.Adicionar(produto);
         }

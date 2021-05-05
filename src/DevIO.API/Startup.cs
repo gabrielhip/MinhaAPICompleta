@@ -38,11 +38,13 @@ namespace DevIO.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
-            {
+            {                
+                app.UseCors("Development"); //usando a configuração de CORS criada, através da policy "Development"
                 app.UseDeveloperExceptionPage();
             }
             else
-            {
+            {                
+                app.UseCors("Production"); //usando a configuração de CORS criada, através da policy "Production"
                 app.UseHsts(); //recurso de segurança com um header (chave/valor) que passa da aplicação pro client, e o client vai entender que a aplicação só conversa em https
             }
 

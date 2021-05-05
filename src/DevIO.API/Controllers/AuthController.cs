@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using DevIO.API.Extensions;
 using DevIO.API.ViewModels;
 using DevIO.Business.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace DevIO.API.Controllers
 {
     [Route("api")]
+    //[DisableCors] //ninguém de fora, de forma alguma, vai conseguir chamar nenhum método dessa controller
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager; //faz o trabalho de realizar o signin (autenticação do usuário)
@@ -33,6 +35,7 @@ namespace DevIO.API.Controllers
             _appSettings = appSettings.Value;
         }
 
+        //[EnableCors("Development")] //se no Startup.cs eu não estiver usando nenhuma policy de CORS, eu consigo habilitar o CORS para esse ponto específico da aplicação
         [HttpPost("nova-conta")]
         public async Task<ActionResult> Registrar(RegisterUserViewModel registerUser)
         {

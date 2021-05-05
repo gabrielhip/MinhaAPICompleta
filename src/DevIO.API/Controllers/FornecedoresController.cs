@@ -33,6 +33,7 @@ namespace DevIO.API.Controllers
             _enderecoRepository = enderecoRepository;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos() //quando o método é async ele tem que retornar uma Task<T>
         {

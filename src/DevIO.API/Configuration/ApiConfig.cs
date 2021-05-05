@@ -29,6 +29,7 @@ namespace DevIO.API.Configuration
 
         public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
         {
+            //se alguém chamar a aplicação via HTTP, automaticamente o .net core faz o redirecionamento interno para HTTPS
             app.UseHttpsRedirection();
 
             //usando a configuração de CORS criada, através da policy "Development"

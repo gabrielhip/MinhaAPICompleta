@@ -43,7 +43,7 @@ namespace DevIO.API
             }
             else
             {
-                app.UseHsts();
+                app.UseHsts(); //recurso de segurança com um header (chave/valor) que passa da aplicação pro client, e o client vai entender que a aplicação só conversa em https
             }
 
             app.UseAuthentication(); //precisa sempre vir antes da configuração do MVC

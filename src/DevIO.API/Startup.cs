@@ -3,6 +3,7 @@ using DevIO.API.Configuration;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,10 +33,12 @@ namespace DevIO.API
 
             services.WebApiConfig(); //configuração de MVC e CORS
 
+            services.AddSwaggerConfig(); //configuração do Swagger
+
             services.ResolveDependencies(); //Configurando a injeção de dependência
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
             {                
@@ -51,6 +54,7 @@ namespace DevIO.API
             app.UseAuthentication(); //precisa sempre vir antes da configuração do MVC
             app.UseMvcConfiguration();
 
+            app.UseSwaggerConfig(provider); //usa a configuração do Swagger
         }
     }
 }

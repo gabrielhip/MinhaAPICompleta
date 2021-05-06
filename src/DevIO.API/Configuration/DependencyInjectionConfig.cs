@@ -6,6 +6,8 @@ using DevIO.Data.Context;
 using DevIO.Data.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace DevIO.API.Configuration
 {
@@ -31,6 +33,9 @@ namespace DevIO.API.Configuration
             //ContextAcessor
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>(); //permite injetar o usuário aonde quiser
+
+            //transient pois é o padrão que o swagger utiliza para resolver as dependências
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
             return services;
         }

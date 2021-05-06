@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using DevIO.Api.Extensions;
+using DevIO.API.Controllers;
 using DevIO.API.ViewModels;
 using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
@@ -11,10 +12,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DevIO.API.Controllers
+namespace DevIO.API.V1.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class ProdutosController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;

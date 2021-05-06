@@ -1,21 +1,22 @@
-﻿using System;
+﻿using DevIO.API.Controllers;
+using DevIO.API.Extensions;
+using DevIO.API.ViewModels;
+using DevIO.Business.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using DevIO.API.Extensions;
-using DevIO.API.ViewModels;
-using DevIO.Business.Interfaces;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 
-namespace DevIO.API.Controllers
-{
-    [Route("api")]
+namespace DevIO.API.V1.Controllers
+{        
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
     //[DisableCors] //ninguém de fora, de forma alguma, vai conseguir chamar nenhum método dessa controller
     public class AuthController : MainController
     {

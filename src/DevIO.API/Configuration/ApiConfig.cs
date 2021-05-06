@@ -11,6 +11,23 @@ namespace DevIO.API.Configuration
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            //adiciona as configurações de versionamento da API
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true; //assume uma versão default quando não tiver nenhuma versão especificada
+                options.DefaultApiVersion = new ApiVersion(1, 0); //versão default = 1.0
+                options.ReportApiVersions = true; //reporta no header do response se a api está obsoleta
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                //padrão que irá agrupar a versão da API
+                //no caso irá ficar: v + número equivalente a versão
+                //ex: v1, v2, v3
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true; //se tiver uma rota padrão, ele substitui o número da versão pela versão default se não possuir a mesma
+            });
+
             //suprimindo a forma da validação da view model automática, pois quero validar eu mesmo para personalizar as respostas para o usuário
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 

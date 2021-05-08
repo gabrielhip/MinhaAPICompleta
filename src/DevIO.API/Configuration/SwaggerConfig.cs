@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Linq;
 
 namespace DevIO.API.Configuration
 {
@@ -17,6 +20,24 @@ namespace DevIO.API.Configuration
             {
                 //adiciona a documentação padrão
                 c.OperationFilter<SwaggerDefaultValues>();
+
+                //passando uma coleção de dados de segurança
+                var security = new Dictionary<string, IEnumerable<string>>
+                {
+                    //tipo do token + dado (que pode ser uma coleção de string)
+                    {"Bearer", new string[] { }}
+                };
+
+                //configurando a segurança do swagger
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "Insira o token JWT desta maneira: Bearer {seu token}",
+                    Name = "Authorization", //nome do tipo do dado que irei passar
+                    In = "header", //onde irei passar essa informação
+                    Type = "apiKey" //tipo de dado que irei passar no header
+                });
+
+                c.AddSecurityRequirement(security);
             });
 
             return services;

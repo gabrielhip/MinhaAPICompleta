@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevIO.API.Configuration
 {
@@ -45,6 +45,11 @@ namespace DevIO.API.Configuration
 
         public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app, IApiVersionDescriptionProvider provider)
         {
+            //toda vez que eu configuro um middleware, eu tenho que colocá-lo na ordem em que será chamado dentro do pipeline
+            //então, ele deve ficar acima das configurações do swagger
+            //fazendo o uso do middleware criado para restringir o acesso ao swagger 
+            //app.UseMiddleware<SwaggerAuthorizedMiddleware>();
+
             app.UseSwagger(); //utiliza o swagger
 
             //onde irá montar a tela para visualizar a API
@@ -132,6 +137,31 @@ namespace DevIO.API.Configuration
 
                 parameter.Required |= description.IsRequired;
             }
+        }
+    }
+
+    public class SwaggerAuthorizedMiddleware
+    {
+        private readonly RequestDelegate _next; //sempre repassa o request para o próximo middleware
+
+        public SwaggerAuthorizedMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            //validação que pode ser alterada conforme quiser
+            //verifica se dentro do request existe a palavra "swagger" dentro do path (ou seja, se existe na url)
+            //e se o usuário está autenticado
+            if (context.Request.Path.StartsWithSegments("/swagger")
+                && !context.User.Identity.IsAuthenticated)
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return;
+            }
+
+            await _next.Invoke(context);
         }
     }
 }

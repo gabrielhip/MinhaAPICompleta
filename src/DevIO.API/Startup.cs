@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DevIO.API.Configuration;
+using DevIO.API.Extensions;
 using DevIO.Data.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,8 @@ namespace DevIO.API
 
             services.AddSwaggerConfig(); //configuração do Swagger
 
+            services.AddLoggingConfiguration(); //configuração de logging elmahio
+
             services.ResolveDependencies(); //Configurando a injeção de dependência
         }
 
@@ -52,9 +55,14 @@ namespace DevIO.API
             }
 
             app.UseAuthentication(); //precisa sempre vir antes da configuração do MVC
+
+            app.UseMiddleware<ExceptionMiddleware>(); //usando o middleware configurado para logar todas as exceptions no elmahio
+
             app.UseMvcConfiguration();
 
             app.UseSwaggerConfig(provider); //usa a configuração do Swagger
+
+            app.UseLoggingConfiguration(); //usa a configuração do logging elmahio
         }
     }
 }

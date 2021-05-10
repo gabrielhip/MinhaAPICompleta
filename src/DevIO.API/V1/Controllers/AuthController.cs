@@ -4,6 +4,7 @@ using DevIO.API.ViewModels;
 using DevIO.Business.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -23,17 +24,19 @@ namespace DevIO.API.V1.Controllers
         private readonly SignInManager<IdentityUser> _signInManager; //faz o trabalho de realizar o signin (autenticação do usuário)
         private readonly UserManager<IdentityUser> _userManager; //responsável por criar o usuário e fazer suas manipulações
         private readonly AppSettings _appSettings;
+        private readonly ILogger _logger;
 
         public AuthController(INotificador notificador, 
                               UserManager<IdentityUser> userManager, 
                               SignInManager<IdentityUser> signInManager, 
                               //IOptions serve para pegar dados que servem como parâmetros
                               IOptions<AppSettings> appSettings,
-                              IUser user) : base(notificador, user)
+                              IUser user, ILogger<AuthController> logger) : base(notificador, user)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         //[EnableCors("Development")] //se no Startup.cs eu não estiver usando nenhuma policy de CORS, eu consigo habilitar o CORS para esse ponto específico da aplicação
@@ -76,6 +79,7 @@ namespace DevIO.API.V1.Controllers
 
             if (result.Succeeded)
             {
+                _logger.LogInformation("Usuário " + loginUser.Email + " logado com sucesso");
                 return CustomResponse(await GerarJwt(loginUser.Email));
             }
 

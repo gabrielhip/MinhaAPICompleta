@@ -36,7 +36,7 @@ namespace DevIO.API
 
             services.AddSwaggerConfig(); //configuração do Swagger
 
-            services.AddLoggingConfiguration(); //configuração de logging elmahio
+            services.AddLoggingConfiguration(Configuration); //configuração de logging elmahio
 
             services.ResolveDependencies(); //Configurando a injeção de dependência
         }
@@ -44,12 +44,12 @@ namespace DevIO.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             if (env.IsDevelopment())
-            {                
+            {
                 app.UseCors("Development"); //usando a configuração de CORS criada, através da policy "Development"
                 app.UseDeveloperExceptionPage();
             }
             else
-            {                
+            {
                 app.UseCors("Production"); //usando a configuração de CORS criada, através da policy "Production"
                 app.UseHsts(); //recurso de segurança com um header (chave/valor) que passa da aplicação pro client, e o client vai entender que a aplicação só conversa em https
             }
